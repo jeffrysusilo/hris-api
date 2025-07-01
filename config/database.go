@@ -8,34 +8,32 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"fmt"
+	// "github.com/joho/godotenv"
 )
 
 var DB *mongo.Database
 
 func ConnectDB() {
-	client, err := mongo.NewClient(options.Client().ApplyURI(os.Getenv("MONGO_URI")))
-	if err != nil {
-		log.Fatal("❌ MongoDB client creation error:", err)
-	}
+    clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_URI"))
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-	defer cancel()
+    client, err := mongo.Connect(ctx, clientOptions)
+    if err != nil {
+        log.Fatalf("❌ MongoDB connection error: %v", err)
+    }
 
-	err = client.Connect(ctx)
-	if err != nil {
-		log.Fatal("❌ MongoDB connection error:", err)
-	}
+    err = client.Ping(ctx, nil)
+    if err != nil {
+        log.Fatalf("❌ MongoDB ping error: %v", err)
+    }
 
-	// Ping
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Fatal("❌ MongoDB ping error:", err)
-	}
-
-	DB = client.Database(os.Getenv("MONGO_DB"))
-	log.Println("✅ MongoDB Connected to database:", DB.Name())
+    DB = client.Database(os.Getenv("DB_NAME"))
+    fmt.Println("✅ Connected to MongoDB")
 }
 
-func GetCollection(name string) *mongo.Collection {
-	return DB.Collection(name)
+func GetCollection(collectionName string) *mongo.Collection {
+    return DB.Collection(collectionName)
 }

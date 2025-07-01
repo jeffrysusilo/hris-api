@@ -9,17 +9,18 @@ import (
 
 	"hris-api/config"
 	"hris-api/routes"
+	"hris-api/controllers"
 )
 
 func main() {
-	// Load .env
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
 
-	// Connect MongoDB
 	config.ConnectDB()
+	controllers.InitControllers()
 	log.Println("✅ Connected to MongoDB")
 
 	r := gin.Default()

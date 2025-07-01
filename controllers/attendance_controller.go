@@ -11,9 +11,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+
 )
 
-var attendanceCol = config.GetCollection("attendances")
+var attendanceCol *mongo.Collection
+
+func InitAttendanceController() {
+	attendanceCol = config.GetCollection("attendances")
+}
 
 func CheckIn(c *gin.Context) {
 	var input struct {

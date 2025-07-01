@@ -11,11 +11,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
+
 )
 
-var payrollCol = config.GetCollection("payrolls")
-var attendanceCol = config.GetCollection("attendances")
-var employeeCol = config.GetCollection("employees")
+var payrollCol *mongo.Collection
+// var employeeCol *mongo.Collection
+// var attendanceCol *mongo.Collection
+
+func InitPayrollController() {
+	payrollCol = config.GetCollection("payrolls")
+	// employeeCol = config.GetCollection("employees")
+	// attendanceCol = config.GetCollection("attendances")
+}
 
 func GeneratePayroll(c *gin.Context) {
 	var input struct {
