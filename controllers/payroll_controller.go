@@ -34,7 +34,6 @@ func GeneratePayroll(c *gin.Context) {
 		return
 	}
 
-	// Ambil data gaji dari employee
 	var emp models.Employee
 	err = employeeCol.FindOne(context.Background(), bson.M{"_id": empID}).Decode(&emp)
 	if err != nil {
@@ -42,7 +41,6 @@ func GeneratePayroll(c *gin.Context) {
 		return
 	}
 
-	// Ambil absensi di bulan & tahun yg dipilih
 	start := time.Date(input.Year, time.Month(input.Month), 1, 0, 0, 0, 0, time.UTC)
 	end := start.AddDate(0, 1, 0)
 
