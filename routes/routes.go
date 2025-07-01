@@ -18,4 +18,17 @@ func SetupRoutes(router *gin.Engine) {
 		employee.PUT(":id", controllers.UpdateEmployee)
 		employee.DELETE(":id", controllers.DeleteEmployee)
 	}
+
+	attendance := router.Group("/attendance")
+	{
+		attendance.POST("/checkin", controllers.CheckIn)
+		attendance.POST("/checkout/:id", controllers.CheckOut)
+		attendance.GET("/employee/:id", controllers.GetEmployeeAttendance)
+	}
+
+	payroll := router.Group("/payroll")
+	{
+		payroll.POST("/generate", controllers.GeneratePayroll)
+		payroll.GET("/employee/:id", controllers.GetPayrollHistory)
+	}
 }
